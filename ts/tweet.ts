@@ -7,16 +7,43 @@ class Tweet {
 		this.time = new Date(tweet_time);//, "ddd MMM D HH:mm:ss Z YYYY"
 	}
 
+    private get cleanedText():string {
+        return this.text
+            .replace(/https?:\/\/\S+/g, "")
+            .replace(/#runkeeper/gi, "")
+            .replace(/\s+/g, " ")
+            .trim();
+    }
+
 	//returns either 'live_event', 'achievement', 'completed_event', or 'miscellaneous'
     get source():string {
         //TODO: identify whether the source is a live event, an achievement, a completed event, or miscellaneous.
-        return "unknown";
+        const lower = this.text.toLocaleLowerCase();
+        if (lower.startsWith("just completed") || lower.startsWith("just posted")) {
+            return "completed_event";
+        }
+        
+        if (lower.includes("right now") || lower.startsWith("watch my")){
+            return "live_event";
+        }
+
+        if (lower.includes("achieved") || lower.includes("personal record") || lower.includes("goal")){
+            return "achievement";
+        }
+
+        return "miscellaneous";
     }
 
     //returns a boolean, whether the text includes any content written by the person tweeting.
     get written():boolean {
+        const body = this.cleanedText;
+
+        if (body.includes("Check it out!")) {
+            return false;
+
+        }
         //TODO: identify whether the tweet is written
-        return false;
+        return body.includes(" - ");
     }
 
     get writtenText():string {
@@ -24,7 +51,9 @@ class Tweet {
             return "";
         }
         //TODO: parse the written text from the tweet
-        return "";
+        const body = this.cleanedText;
+        const separatorIndex = body.indexOf(" - ");
+        return body.substring(separatorIndex + 3).trim();
     }
 
     get activityType():string {
