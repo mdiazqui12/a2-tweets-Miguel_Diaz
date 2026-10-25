@@ -60,8 +60,23 @@ class Tweet {
         if (this.source != 'completed_event') {
             return "unknown";
         }
+
+    
+        const prefix = "^just (?:completed|posted) an?";
+        const distance = "(?: [\\d.]+ (?:km|mi) )?";
+        const activity = "(.+?)";
+        const suffix = "(?: in \\d| with @runkeeper| - | https?:|$)";
+
+        const sentance =new RegExp(prefix + " " + distance + activity + suffix);
+
+        const match = this.text.toLowerCase().match(sentance);
+        
+        if (!match) {
+            return "unknown";
+        }
+
         //TODO: parse the activity type from the text of the tweet
-        return "";
+        return match[1].replace(/ (?:workout|practice|ride)$/, "").trim();
     }
 
     get distance():number {
