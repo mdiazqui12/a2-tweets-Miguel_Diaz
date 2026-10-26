@@ -83,8 +83,26 @@ class Tweet {
         if(this.source != 'completed_event') {
             return 0;
         }
+        
         //TODO: prase the distance from the text of the tweet
         return 0;
+    
+    
+        const prefix = "/^just (?:completed|posted) an?";
+        const distance = "?:{\\d.]+ (?:km|mi) )?";
+        const activity = "(.+?)";
+        const suffix = "(?: in \\d| with @runkeeper| - | https?:|$)";
+
+        const sentence = new RegExp(prefix + " " + distance + activity + suffix);
+
+        const match = this.text.toLocaleLowerCase().match(sentence);
+        if (!match) {
+            return 0;
+        }
+
+        const value = parseFloat(match[1]);
+        //conversion from km to miles
+        return match[2] === "km" ? value / 1.609 : value;
     }
 
     getHTMLTableRow(rowNumber:number):string {
