@@ -63,7 +63,7 @@ class Tweet {
 
     
         const prefix = "^just (?:completed|posted) an?";
-        const distance = "(?: [\\d.]+ (?:km|mi) )?";
+        const distance = "(?:[\\d.]+ (?:km|mi) )?";
         const activity = "(.+?)";
         const suffix = "(?: in \\d| with @runkeeper| - | https?:|$)";
 
@@ -85,15 +85,10 @@ class Tweet {
         }
         
         //TODO: prase the distance from the text of the tweet
-        return 0;
-    
-    
-        const prefix = "/^just (?:completed|posted) an?";
-        const distance = "?:{\\d.]+ (?:km|mi) )?";
-        const activity = "(.+?)";
-        const suffix = "(?: in \\d| with @runkeeper| - | https?:|$)";
-
-        const sentence = new RegExp(prefix + " " + distance + activity + suffix);
+        const prefix = "^just (?:completed|posted) an?";
+        const distance = "([\\d.]+)";
+        const distanceNum = "(km|mi)\\b";
+        const sentence = new RegExp(prefix + " " + distance + " " + distanceNum);
 
         const match = this.text.toLocaleLowerCase().match(sentence);
         if (!match) {
