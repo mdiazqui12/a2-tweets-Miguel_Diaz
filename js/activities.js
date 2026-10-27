@@ -24,7 +24,7 @@ function parseTweets(runkeeper_tweets) {
 	});
 	activityCounts.sort(function(one,two) {return two.count - one.count; });
 
-	document.getElementById('numberActivities').innertext = activityCounts.length;
+	document.getElementById('numberActivities').innerText = activityCounts.length;
 	document.getElementById('firstMost').innerText= activityCounts[0].activityType;
 	document.getElementById('secondMost').innerText = activityCounts[1].activityType;
 	document.getElementById('thirdMost').innerText = activityCounts[2].activityType;
